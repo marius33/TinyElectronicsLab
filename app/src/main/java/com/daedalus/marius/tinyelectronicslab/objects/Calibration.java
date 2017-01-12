@@ -10,8 +10,8 @@ public class Calibration {
     public static int OUT_OF_RANGE_LOW = -1;
     public static int OUT_OF_RANGE_HIGH = -2;
 
-    SparseIntArray dataSet;
-    short amplitude;
+    private SparseIntArray dataSet;
+    private short amplitude;
 
     Calibration() {
         dataSet = new SparseIntArray();

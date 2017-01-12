@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">TinyElectronicsLab</string>
     <string name="lcr_meter">LCR Meter</string>
-    <string name="oscilloscope">Oscilloscope/Function Generator</string>
+    <string name="fnct_gen">Function generator</string>
+    <string name="oscilloscope">Oscilloscope</string>
     <string name="camera">Resistor Colour Code Reader</string>
     <string name="camera_opencv">OpenCV Color Code</string>
     <string name="hello_world">Hello world!</string>

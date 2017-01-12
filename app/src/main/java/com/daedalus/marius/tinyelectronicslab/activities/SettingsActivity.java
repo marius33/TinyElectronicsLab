@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.CheckBox;
@@ -15,7 +15,8 @@ import com.daedalus.marius.tinyelectronicslab.R;
 /**
  * Created by Marius on 28.02.2015.
  */
-public class SettingsActivity extends ActionBarActivity {
+
+public class SettingsActivity extends AppCompatActivity {
 
     public static final String FORCE_JACK_OUTPUT = "forceAudioJackOutput";
     public static final String KEEP_SCREEN_ON = "keepScreenOn";
