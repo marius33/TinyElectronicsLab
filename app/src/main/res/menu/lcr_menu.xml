@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".MultimeterActivity">
+
+    <item
+        android:id="@+id/action_activity_osc"
+        android:orderInCategory="100"
+        android:title="@string/oscilloscope"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:title="@string/action_settings"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_calibrate"
+        android:orderInCategory="100"
+        android:title="@string/calibrate"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_ranged_calibrate"
+        android:orderInCategory="100"
+        android:title="@string/calibrate_new"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_add_value"
+        android:orderInCategory="100"
+        android:title="@string/add_value"
+        app:showAsAction="never" />
+</menu>

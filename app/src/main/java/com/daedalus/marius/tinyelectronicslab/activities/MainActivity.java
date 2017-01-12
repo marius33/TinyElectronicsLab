@@ -1,7 +1,9 @@
-package com.daedalus.marius.tinyelectronicslab;
+package com.daedalus.marius.tinyelectronicslab.activities;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.daedalus.marius.tinyelectronicslab.R;
 
 public class MainActivity extends AppCompatActivity {
 

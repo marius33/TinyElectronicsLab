@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center|top"
+    android:orientation="vertical">
+
+    <Spinner
+        android:id="@+id/rangeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textViewValue"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:padding="10dp"
+            android:text="VALUE"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/textViewUnit"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:padding="10dp"
+            android:text="UNIT"
+            android:textSize="30sp" />
+    </LinearLayout>
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="horizontal">
+
+        <RadioButton
+            android:id="@+id/radioOHM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Ohm" />
+
+        <RadioButton
+            android:id="@+id/radioFARAD"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Farad" />
+
+        <RadioButton
+            android:id="@+id/radioHENRY"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Henry" />
+
+        <RadioButton
+            android:id="@+id/radioHERZ"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Herz" />
+
+    </RadioGroup>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <ToggleButton
+            android:id="@+id/autoHold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Auto Hold" />
+
+        <ToggleButton
+            android:id="@+id/continuity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Continuity Checker" />
+
+        <ToggleButton
+            android:id="@+id/runStop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Run/Stop"
+            android:textOff="Run"
+            android:textOn="Stop" />
+
+    </LinearLayout>
+
+</LinearLayout>

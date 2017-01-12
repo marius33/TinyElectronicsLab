@@ -1,3 +1,37 @@
 <resources>
     <string name="app_name">TinyElectronicsLab</string>
+    <string name="lcr_meter">LCR Meter</string>
+    <string name="oscilloscope">Oscilloscope/Function Generator</string>
+    <string name="camera">Resistor Colour Code Reader</string>
+    <string name="camera_opencv">OpenCV Color Code</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="add_value">Add another measured value pair</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="calibrate_new">Ranged calibrate</string>
+    <string name="action_settings">Settings</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="set_amplitude">Set max amplitude</string>
+
+    <string-array name="functions_array">
+        <item>Sinusoid</item>
+        <item>Triangle</item>
+        <item>50% duty Square</item>
+    </string-array>
+
+    <string-array name="horizontal_deflection_values">
+        <item>50 µs</item>
+        <item>100 µs</item>
+        <item>250 µs</item>
+        <item>500 µs</item>
+        <item>1 ms</item>
+    </string-array>
+
+    <string-array name="vertical_deflection_values">
+        <item>1x</item>
+        <item>2x</item>
+        <item>5x</item>
+        <item>10x</item>
+        <item>100x</item>
+    </string-array>
 </resources>
