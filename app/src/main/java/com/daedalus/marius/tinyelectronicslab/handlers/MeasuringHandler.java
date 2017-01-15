@@ -12,19 +12,14 @@ public class MeasuringHandler extends Handler {
     WeakReference<WorkerActivity> mTarget;
 
     public MeasuringHandler(WorkerActivity activity) {
-        super();
-        mTarget = new WeakReference<WorkerActivity>(activity);
+        mTarget = new WeakReference<>(activity);
     }
 
     @Override
     public void handleMessage(Message msg) {
         final WorkerActivity target = mTarget.get();
         if (target != null) {
-            if (msg.what == 0) {
-                target.onDataReceived(msg.arg1, (short[]) msg.obj);
-            } else {
-
-            }
+                target.onDataReceived((short[]) msg.obj);
         }
     }
 }

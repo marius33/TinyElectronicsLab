@@ -38,23 +38,20 @@ public class InputReader implements Runnable {
                     }
                 }
             }
-            double sum = 0;
+//            double sum = 0;
             int readSize = mRecorder.read(mBuffer, 0, mBuffer.length);
 
             if (readSize > 0) {
                 short[] samples = new short[readSize];
-                for (int i = 0; i < readSize; i++) {
-                    sum += mBuffer[i] * mBuffer[i];
+                for (int i = 0; i < readSize; i++){
+//                    sum += mBuffer[i] * mBuffer[i];
                     samples[i] = mBuffer[i];
                 }
-
-                final int amplitude = (int) Math.sqrt((sum / readSize));
+//
+//                final int amplitude = (int) Math.sqrt((sum / readSize));
 
                 Message message = new Message();
-                message.arg1 = amplitude;
-                message.arg2 = readSize;
                 message.obj = samples;
-                message.what = 0;
 
                 if (mHandler != null)
                     mHandler.sendMessage(message);

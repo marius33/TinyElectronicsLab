@@ -22,7 +22,7 @@ import com.daedalus.marius.tinyelectronicslab.R;
 import com.daedalus.marius.tinyelectronicslab.handlers.CalibratingHandler;
 import com.daedalus.marius.tinyelectronicslab.objects.Calibration;
 import com.daedalus.marius.tinyelectronicslab.objects.Calibrations;
-import com.daedalus.marius.tinyelectronicslab.objects.FixedSizeIntStack;
+import com.daedalus.marius.tinyelectronicslab.objects.FixedSizeQueue;
 import com.daedalus.marius.tinyelectronicslab.objects.Utilities;
 
 public class MultimeterActivity extends WorkerActivity {
@@ -35,8 +35,8 @@ public class MultimeterActivity extends WorkerActivity {
     //private short[] mBuffer;
     //private int vRMS = 0;
 
-    private FixedSizeIntStack rmsInputs;
-    private FixedSizeIntStack freqs;
+    private FixedSizeQueue rmsInputs;
+    private FixedSizeQueue freqs;
 
     private int outOfRangeCounter;
     private float oldZx;
@@ -71,8 +71,8 @@ public class MultimeterActivity extends WorkerActivity {
         //impedances = new float[20];
         //frequencies = new float[20];
 
-        rmsInputs = new FixedSizeIntStack(30);
-        freqs = new FixedSizeIntStack(30);
+        rmsInputs = new FixedSizeQueue(30);
+        freqs = new FixedSizeQueue(30);
 
         runStop = (ToggleButton) findViewById(R.id.runStop);
         runStop.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {

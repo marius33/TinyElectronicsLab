@@ -13,6 +13,9 @@
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="set_amplitude">Set max amplitude</string>
+    <string name="calibration">Calibrate now</string>
+    <string name="calibrate_hint">Connect a resistor between the input and output wires,
+        write it\'s value in the field below and click "Calibrate now"</string>
 
     <string-array name="functions_array">
         <item>Sinusoid</item>

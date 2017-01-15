@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:text="@string/calibrate_hint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12pt"
+        android:id="@+id/textView" />
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="65dp">
+
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="48dp"
+            android:ems="10"
+            android:id="@+id/editText_resistance"
+            android:layout_weight="1.00"
+            android:inputType="number" />
+
+        <TextView
+            android:text="Ω"
+            android:textAlignment="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textSize="48dp"
+            android:id="@+id/textView2"
+            android:layout_weight="0.11" />
+
+    </LinearLayout>
+
+    <Button
+        android:text="@string/calibration"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/button_calibrate_now" />
+
+</LinearLayout>

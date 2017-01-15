@@ -19,19 +19,23 @@ import com.daedalus.marius.tinyelectronicslab.R;
 import com.daedalus.marius.tinyelectronicslab.handlers.CalibratingHandler;
 import com.daedalus.marius.tinyelectronicslab.handlers.MeasuringHandler;
 import com.daedalus.marius.tinyelectronicslab.objects.Calibrations;
+import com.daedalus.marius.tinyelectronicslab.objects.FixedSizeQueue;
 import com.daedalus.marius.tinyelectronicslab.objects.InputReader;
 import com.daedalus.marius.tinyelectronicslab.objects.OutputGenerator;
 
 import java.lang.reflect.Method;
+import java.util.LinkedList;
 
 /**
  * Created by Marius on 04.03.2015.
  */
-public abstract class WorkerActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener, SharedPreferences.OnSharedPreferenceChangeListener {
+public abstract class WorkerActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
 
     public static String TAG = "LCR METER";
 
     protected Handler mHandler;
+
+    protected FixedSizeQueue<Short> mValues;
 
     public OutputGenerator mGenerator;
     public InputReader mReader;
@@ -49,44 +53,26 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        calib = readCalibrationFile();
-
-        if (calib != null) {
-            if (calib.getRanges().length != 0)
-                mHandler = new MeasuringHandler(this);
-            else {
-                mHandler = new CalibratingHandler(this, false, false);
-                getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            }
-        } else {
-            mHandler = new CalibratingHandler(this, false, false);
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-            calib = new Calibrations();
-        }
+        mValues = new FixedSizeQueue<>(4096);
+        mHandler = new MeasuringHandler(this);
 
         mGenerator = new OutputGenerator();
         mGenerator.amplitude = (short) calib.getAmplitude(0);
         mReader = new InputReader(mHandler);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
-
         int result = audioManager.requestAudioFocus(this, AudioManager.STREAM_MUSIC,
                 AudioManager.AUDIOFOCUS_GAIN);
-
         if (result != AudioManager.AUDIOFOCUS_REQUEST_GRANTED) {
             setEnabled(false);
             Toast.makeText(this, "Audio focus request not granted", Toast.LENGTH_SHORT).show();
         }
 
         SharedPreferences sp = getSharedPreferences(SettingsActivity.SHARED_PREF_NAME, Context.MODE_PRIVATE);
-        sp.registerOnSharedPreferenceChangeListener(this);
 
         forceOutputToAudioJack = sp.getBoolean(SettingsActivity.FORCE_JACK_OUTPUT, false);
-
         keepScreenOn = sp.getBoolean(SettingsActivity.KEEP_SCREEN_ON, false);
-
 
     }
 
@@ -112,6 +98,8 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
 
         setEnabled(true);
         routeToAudioJack(forceOutputToAudioJack);
+        if(keepScreenOn)
+            getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     }
 
     @Override
@@ -193,14 +181,6 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         }
     }
 
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        if (key.equals(SettingsActivity.FORCE_JACK_OUTPUT))
-            forceOutputToAudioJack = sharedPreferences.getBoolean(SettingsActivity.FORCE_JACK_OUTPUT, false);
-        else if (key.equals(SettingsActivity.KEEP_SCREEN_ON))
-            keepScreenOn = sharedPreferences.getBoolean(SettingsActivity.KEEP_SCREEN_ON, false);
-    }
-
     public class RemoteControlReceiver extends BroadcastReceiver {
 
         @Override
@@ -274,9 +254,23 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         mReader.setHandler(mHandler);
     }
 
-    public abstract void onDataReceived(int vOUTx, short[] buffer);
+    public void onDataReceived(short[] buffer){
 
-    public abstract void putResistanceMeasurementPair(int rx, int vOUTx);
+        int size = mValues.size();
+        int len = buffer.length;
+        if(len>size){
+            for(int i=len-size; i<len; i++)
+                mValues.add(buffer[i]);
+        }
+        else
+            for(short i : buffer)
+                mValues.add(i);
+
+        notifyDataReceived(mValues);
+
+    }
+
+    public abstract void notifyDataReceived(FixedSizeQueue values);
 
     /*Code shamelessly stolen from toggleheadset2
     * Some devices don't automatically toggle to Headphone Mode when plugging

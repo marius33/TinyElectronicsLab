@@ -49,7 +49,7 @@ public class CalibratingHandler extends Handler {
     private ProgressDialog progressDialog;
 
     public CalibratingHandler(final WorkerActivity activity, boolean append, boolean ranged) {
-        super();
+
         mTarget = new WeakReference<WorkerActivity>(activity);
         state = State.IDLE;
         values = new int[50];
