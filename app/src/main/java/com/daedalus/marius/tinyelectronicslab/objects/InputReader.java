@@ -43,7 +43,7 @@ public class InputReader implements Runnable {
 
             if (readSize > 0) {
                 short[] samples = new short[readSize];
-                for (int i = 0; i < readSize; i++){
+                for (int i = 0; i < readSize; i++) {
 //                    sum += mBuffer[i] * mBuffer[i];
                     samples[i] = mBuffer[i];
                 }
@@ -141,4 +141,16 @@ public class InputReader implements Runnable {
         return null;
     }
 
+    public static int getPreferredSampleRate() {
+
+        int[] sampleRates = new int[]{44100, 32000, 22050, 16000, 11025, 8000};
+        for (int rate : sampleRates) {
+            int bufferSize = AudioRecord.getMinBufferSize(rate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+            if (bufferSize != AudioRecord.ERROR_BAD_VALUE || bufferSize != AudioRecord.ERROR) {
+                return rate;
+            }
+        }
+        return -1;
+    }
 }
+

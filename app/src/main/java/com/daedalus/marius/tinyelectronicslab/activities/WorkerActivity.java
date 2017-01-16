@@ -24,7 +24,12 @@ import com.daedalus.marius.tinyelectronicslab.objects.InputReader;
 import com.daedalus.marius.tinyelectronicslab.objects.OutputGenerator;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Marius on 04.03.2015.
@@ -32,6 +37,7 @@ import java.util.LinkedList;
 public abstract class WorkerActivity extends AppCompatActivity implements AudioManager.OnAudioFocusChangeListener {
 
     public static String TAG = "LCR METER";
+    public static final int DEFAULT_PREF_FREQ = 1000;
 
     protected Handler mHandler;
 
@@ -52,6 +58,35 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        /* Select best signal frequency to ensure as best sample matching as possible */
+        int preferredSampleRate = InputReader.getPreferredSampleRate();
+        int preferredFrequency = DEFAULT_PREF_FREQ;
+        int[] preferredFrequencies = getPreferredFrequencies(preferredSampleRate, DEFAULT_PREF_FREQ);
+        int outSampleRate = OutputGenerator.getPreferredSampleRate();
+        if(outSampleRate==preferredSampleRate){
+            preferredFrequency = preferredFrequencies[16];
+        }
+        else{
+            int[] preferredOutFrequencies = getPreferredFrequencies(outSampleRate, DEFAULT_PREF_FREQ);
+            List<Integer> matchedFrequencies = new ArrayList<>();
+            for(int f1 : preferredOutFrequencies){
+                for(int f2 : preferredOutFrequencies){
+                    if(f1==f2)
+                        matchedFrequencies.add(f1);
+                }
+            }
+            if(matchedFrequencies.size()==0)
+                preferredFrequency = preferredFrequencies[16];
+            else{
+                int fp = Integer.MAX_VALUE;
+                for(int f : matchedFrequencies)
+                    if(Math.abs(DEFAULT_PREF_FREQ - f)<Math.abs(DEFAULT_PREF_FREQ - fp)){
+                        fp = f;
+                    }
+                preferredFrequency = fp;
+            }
+        }
 
         mValues = new FixedSizeQueue<>(4096);
         mHandler = new MeasuringHandler(this);
@@ -333,5 +368,23 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         }
 
         return isRoutingHeadset;
+    }
+
+    protected int[] getPreferredFrequencies(int fSampling, int f){
+
+        int[] goodFreqs = new int[33];
+        int samples = fSampling/f;
+        int counter = 0;
+        float freq;
+        for(int i=-16; i<17; i++){
+            freq = fSampling/(samples+i);
+            if(freq%1==0) {
+                goodFreqs[i + 16] = (int) freq;
+                counter++;
+            }
+        }
+
+        return Arrays.copyOfRange(goodFreqs, 0, counter);
+
     }
 }

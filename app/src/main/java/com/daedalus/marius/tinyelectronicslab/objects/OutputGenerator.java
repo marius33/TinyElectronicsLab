@@ -158,6 +158,10 @@ public class OutputGenerator implements Runnable {
         return frequency;
     }
 
+    public static int getPreferredSampleRate(){
+        return AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
+    }
+
     /*public void setHandler(Handler handler) {
         mHandler = handler;
     }*/
