@@ -62,25 +62,22 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         /* Select best signal frequency to ensure as best sample matching as possible */
         int preferredSampleRate = InputReader.getPreferredSampleRate();
         int preferredFrequency = DEFAULT_PREF_FREQ;
-        int[] preferredFrequencies = getPreferredFrequencies(preferredSampleRate, DEFAULT_PREF_FREQ);
+        List<Integer> preferredFrequencies = getPreferredFrequencies(preferredSampleRate, DEFAULT_PREF_FREQ);
         int outSampleRate = OutputGenerator.getPreferredSampleRate();
         if(outSampleRate==preferredSampleRate){
-            preferredFrequency = preferredFrequencies[16];
+            preferredFrequency = preferredFrequencies.get(16);
         }
         else{
-            int[] preferredOutFrequencies = getPreferredFrequencies(outSampleRate, DEFAULT_PREF_FREQ);
-            List<Integer> matchedFrequencies = new ArrayList<>();
-            for(int f1 : preferredOutFrequencies){
-                for(int f2 : preferredOutFrequencies){
-                    if(f1==f2)
-                        matchedFrequencies.add(f1);
-                }
-            }
-            if(matchedFrequencies.size()==0)
-                preferredFrequency = preferredFrequencies[16];
+            List<Integer> preferredOutFrequencies = getPreferredFrequencies(outSampleRate, DEFAULT_PREF_FREQ);
+            Set<Integer> s1 = new HashSet<>(preferredFrequencies);
+            Set<Integer> s2 = new HashSet<>(preferredOutFrequencies);
+            s1.retainAll(s2);
+
+            if(s1.size()==0)
+                preferredFrequency = preferredFrequencies.get(16);
             else{
                 int fp = Integer.MAX_VALUE;
-                for(int f : matchedFrequencies)
+                for(Integer f : s1)
                     if(Math.abs(DEFAULT_PREF_FREQ - f)<Math.abs(DEFAULT_PREF_FREQ - fp)){
                         fp = f;
                     }
@@ -88,12 +85,13 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
             }
         }
 
+
         mValues = new FixedSizeQueue<>(4096);
         mHandler = new MeasuringHandler(this);
 
         mGenerator = new OutputGenerator();
         mGenerator.amplitude = (short) calib.getAmplitude(0);
-        mReader = new InputReader(mHandler);
+        mReader = new InputReader(mHandler, preferredSampleRate);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         setVolumeControlStream(AudioManager.STREAM_MUSIC);
@@ -370,21 +368,19 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         return isRoutingHeadset;
     }
 
-    protected int[] getPreferredFrequencies(int fSampling, int f){
+    protected List<Integer> getPreferredFrequencies(int fSampling, int f){
 
-        int[] goodFreqs = new int[33];
+        ArrayList<Integer> goodFreqs = new ArrayList<>();
         int samples = fSampling/f;
-        int counter = 0;
         float freq;
         for(int i=-16; i<17; i++){
             freq = fSampling/(samples+i);
             if(freq%1==0) {
-                goodFreqs[i + 16] = (int) freq;
-                counter++;
+                goodFreqs.add(new Integer((int) freq));
             }
         }
 
-        return Arrays.copyOfRange(goodFreqs, 0, counter);
+        return goodFreqs;
 
     }
 }

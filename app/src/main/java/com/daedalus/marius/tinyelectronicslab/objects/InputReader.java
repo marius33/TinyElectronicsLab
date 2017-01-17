@@ -13,16 +13,19 @@ public class InputReader implements Runnable {
     private short[] mBuffer;
     private boolean mIsRunning = false;
     private boolean mIsPaused = false;
-    private Handler mHandler;
+    private final Handler mHandler;
 
-    private int sampleRate;
+    private final int sampleRate;
 
     private Thread mThread;
 
-    public InputReader(Handler handler) {
+    public InputReader(Handler handler, int fs) {
 
         mHandler = handler;
-        mRecorder = makeAudioRecord();
+        sampleRate = fs;
+        int bufferSize = AudioRecord.getMinBufferSize(sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        mBuffer = new short[bufferSize];
+        mRecorder = new AudioRecord(MediaRecorder.AudioSource.MIC, sampleRate, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, bufferSize);
         mThread = new Thread(this);
 
     }
@@ -68,8 +71,6 @@ public class InputReader implements Runnable {
     }
 
     public void start() {
-        if (mRecorder == null)
-            mRecorder = makeAudioRecord();
 
         if (!mIsRunning) {
             mIsRunning = true;
@@ -108,37 +109,8 @@ public class InputReader implements Runnable {
 
     }
 
-    public void setHandler(Handler handler) {
-        mHandler = handler;
-    }
-
     public int getSampleRate() {
         return sampleRate;
-    }
-
-    private AudioRecord makeAudioRecord() {
-        int[] sampleRates = new int[]{44100, 32000, 22050, 16000, 11025, 8000};
-        for (short audioFormat : new short[]{AudioFormat.ENCODING_PCM_16BIT, AudioFormat.ENCODING_PCM_8BIT}) {
-            for (int rate : sampleRates) {
-                try {
-                    int bufferSize = AudioRecord.getMinBufferSize(rate, AudioFormat.CHANNEL_IN_MONO, audioFormat);
-                    if (bufferSize != AudioRecord.ERROR_BAD_VALUE) {
-                        AudioRecord recorder = new AudioRecord(MediaRecorder.AudioSource.MIC, rate, AudioFormat.CHANNEL_IN_MONO, audioFormat, bufferSize);
-
-                        if (recorder.getState() == AudioRecord.STATE_INITIALIZED) {
-                            mBuffer = new short[bufferSize];
-                            sampleRate = rate;
-                            return recorder;
-                        }//else
-                        //   recorder.release();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-        }
-        return null;
     }
 
     public static int getPreferredSampleRate() {
