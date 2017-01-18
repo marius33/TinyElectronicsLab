@@ -86,7 +86,7 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         }
 
 
-        mValues = new FixedSizeQueue<>(4096);
+        mValues = new FixedSizeQueue<>(preferredSampleRate/preferredFrequency);
         mHandler = new MeasuringHandler(this);
 
         mGenerator = new OutputGenerator();
@@ -256,37 +256,13 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         }
     }
 
-    protected Calibrations readCalibrationFile() {
-
-        return null;
-
-    }
-
-    protected boolean writeCalibrationFile() {
-
-        return false;
-    }
-
     public void setEnabled(boolean enabled) {
         if (!enabled) {
             mGenerator.pause();
             mReader.pause();
         }
     }
-
-    public void notifyCalibrationDone() {
-
-        setHandler(new MeasuringHandler(this));
-        writeCalibrationFile();
-        if (!keepScreenOn)
-            getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
-
-    protected void setHandler(Handler handler) {
-        mHandler = handler;
-        mReader.setHandler(mHandler);
-    }
-
+    
     public void onDataReceived(short[] buffer){
 
         int size = mValues.size();
