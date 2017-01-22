@@ -262,7 +262,7 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
             mReader.pause();
         }
     }
-    
+
     public void onDataReceived(short[] buffer){
 
         int size = mValues.size();
@@ -359,4 +359,5 @@ public abstract class WorkerActivity extends AppCompatActivity implements AudioM
         return goodFreqs;
 
     }
+
 }

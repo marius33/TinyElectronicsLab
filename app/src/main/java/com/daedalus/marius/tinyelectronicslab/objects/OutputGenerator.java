@@ -15,7 +15,7 @@ public class OutputGenerator implements Runnable {
     private int frequency = 1000;
     private float phi = 0;
     private float angle = 0;
-    public short amplitude = 1000;
+        private short amplitude = 1000;
     //private Handler mHandler;
     private Thread thread;
 
@@ -59,6 +59,20 @@ public class OutputGenerator implements Runnable {
         mTrack = new AudioTrack(AudioManager.STREAM_MUSIC, sampleRateInHz,
                 AudioFormat.CHANNEL_OUT_MONO, AudioFormat.ENCODING_PCM_16BIT,
                 bufferSizeInBytes, AudioTrack.MODE_STREAM);
+        
+        mTrack.setPlaybackPositionUpdateListener(new AudioTrack.OnPlaybackPositionUpdateListener() {
+
+            @Override
+            public void onMarkerReached(AudioTrack track) {
+
+            }
+
+            @Override
+            public void onPeriodicNotification(AudioTrack track) {
+
+            }
+
+        });
 
         this.frequency = frequency;
 
@@ -162,8 +176,12 @@ public class OutputGenerator implements Runnable {
         return AudioTrack.getNativeOutputSampleRate(AudioManager.STREAM_MUSIC);
     }
 
-    /*public void setHandler(Handler handler) {
-        mHandler = handler;
-    }*/
+    public short getAmplitude() {
+        return amplitude;
+    }
+
+    public void setAmplitude(short amplitude) {
+        this.amplitude = amplitude;
+    }
 
 }
